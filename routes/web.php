@@ -1,27 +1,21 @@
-<?php
+<?php 
 
 use Lib\Route;
 
 use App\Controllers\HomeController;
 
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class , 'index']);
 
-Route::get('/contact', function() {
-    return "hola desde la página contacto";
+Route::get('/contact', function () {
+    return 'Hola desde la página contacto';
 });
 
-Route::get('/about', function() {
-    return "hola desde la página acerca de";
-});
-
-Route::get('/courses/prueba', function() {
-    return "hola desde la página cursos de prueba";
+Route::get('/about', function () {
+    return 'Hola desde la página acerca de';
 });
 
 Route::get('/courses/:slug', function($slug) {
-    return "El curso es: " . $slug;
+    return 'Hola desde la página cursos de '. $slug;
 });
- 
-
 
 Route::dispatch();

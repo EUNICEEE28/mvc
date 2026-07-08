@@ -6,42 +6,38 @@ class Route
 {
     private static $routes = [];
 
-    public static function get($uri, $callback)
+    public static function get($uri, $callback) 
     {
-        $uri = trim($uri, '/');
+        $uri = trim($uri,'/');
         self::$routes['GET'][$uri] = $callback;
     }
 
     public static function post($uri, $callback)
     {
-        $uri = trim($uri, '/');
+        $uri = trim($uri,'/');
         self::$routes['POST'][$uri] = $callback;
     }
 
-    public static function dispatch()
+    public static function dispatch() 
     {
         $uri = $_SERVER['REQUEST_URI'];
         $uri = trim($uri, '/');
 
         $method = $_SERVER['REQUEST_METHOD'];
 
-        foreach (self::$routes[$method] as $route => $callback) {
-
-
-            if (strpos($route, ':') !== false) {
+        foreach(self::$routes[$method] as $route => $callback){ //$route lo que almacena es = '/', '/contact' , '/about' Y $callback almacena las function() que hay en web.php
+            
+            if(strpos($route, ':') !== false) {
                 $route = preg_replace('#:[a-zA-Z]+#', '([a-zA-Z]+)', $route);
-            }    
+            }
 
-
-
-            if (preg_match("#^$route$#", $uri, $matches)) {
-                /*$callback();*/
+            if(preg_match("#^$route$#", $uri, $matches)) {
 
                 $params = array_slice($matches, 1);
 
-                /*$response = $callback(...$params);*/
-
-                if(is_callable($callback)){
+                // ['a', 'b', 'c'] esto hace: ...
+                //$response = $callback(...$params);
+                if(is_callable($callback)) {
                     $response = $callback(...$params);
                 }
 
@@ -50,20 +46,20 @@ class Route
                     $response = $controller->{$callback[1]}(...$params);
                 }
 
-
-                if (is_array($response) || is_object($response)){
+                if(is_array($response) || is_object($response)){ 
 
                     header('Content-Type: application/json');
 
                     echo json_encode($response);
-                } else {
+                }else {
                     echo $response;
                 }
+                
 
-                return;
+                return ;
+            //echo json_encode($params); //$matches es un array entonces por eso se usa json_encode
             }
         }
-
-        echo "404 Not Found";
+        echo '404 Not Found';
     }
 }
